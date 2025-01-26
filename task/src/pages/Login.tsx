@@ -38,7 +38,7 @@ export const Login = () => {
         {isAuthenticated === "true" ? (
           <Box>
             <Typography variant="h6" gutterBottom>
-              Hoş geldiniz, {loginUsername}!
+              DataFlowProject : {loginUsername}!
             </Typography>
             <Button
               variant="contained"
@@ -48,28 +48,6 @@ export const Login = () => {
             >
               Çıkış Yap
             </Button>
-            <Grid container spacing={2} sx={{ marginTop: 2 }}>
-              <Grid item xs={6}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  component={Link}
-                  to="/page1"
-                >
-                  Sayfa 1
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  component={Link}
-                  to="/page2"
-                >
-                  Sayfa 2
-                </Button>
-              </Grid>
-            </Grid>
           </Box>
         ) : (
           <Box component="form" onClick={handleLogin} sx={{ mt: 3 }}>
