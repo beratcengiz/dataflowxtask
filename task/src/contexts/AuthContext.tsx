@@ -25,7 +25,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (loginUsername === "admin" && loginPassword === "password") {
       setIsAuthenticated("true");
       setErrorMessage("");
-      navigate("/");
+      navigate("/page1");
     } else {
       setErrorMessage("Hatalı kullanıcı adı veya şifre.");
     }
