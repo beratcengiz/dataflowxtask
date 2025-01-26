@@ -1,36 +1,40 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useGetComments } from "../service/useGetComments";
-import { Comments } from "../service/useGetComments";
+import React, { createContext, useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import { useGetData } from "../service/useGetQuery";
+
+export type Comments = {
+    postId: number;
+    id: number;
+    name: string;
+    email: string;
+    body: string;
+  };
 
 export const CommentContext = createContext<any>(null);
 
-export const CommentProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const { data, error, isLoading } = useGetComments();
-  const [comments, setComments] = useState<Comments[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isLoading) {
-      setLoading(true);
-    } else if (error instanceof Error) {
-      setErrorMessage(error.message);
-      setLoading(false);
-    } else if (data) {
-      setComments(data);
-      setLoading(false);
-    }
-  }, [data, error, isLoading]);
+export const CommentProvider = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+
+
+  const params = isAuthenticated === "true" && location.pathname === "/page2";
+
+
+  const { data, error, isLoading } = useGetData<Comments[]>(
+    "https://jsonplaceholder.typicode.com/comments", 
+    "comments", 
+    params
+  );
+
   return (
-    <CommentContext.Provider value={{ comments, error: errorMessage, loading }}>
+    <CommentContext.Provider value={{ comments: data, error, loading: isLoading }}>
       {children}
     </CommentContext.Provider>
   );
 };
+
 
 export const useComments = () => {
   return useContext(CommentContext);

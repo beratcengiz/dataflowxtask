@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { usePosts } from "../contexts/PostsContext";
+import { useDelete } from "../service/useDeleteQuery"; // useDelete hook'u import et
 import {
   Table,
   TableBody,
@@ -14,8 +15,11 @@ import {
 } from "@mui/material";
 
 export const Page1: React.FC = () => {
-  const { posts, error, loading } = usePosts();
-
+  const { posts, error, loading } = usePosts(); // Postları Context'ten alıyoruz
+  const { mutate: deletePost} = useDelete(
+    'https://jsonplaceholder.typicode.com/posts', // Silinecek kaynağın URL'si
+    'posts' 
+  );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -23,23 +27,22 @@ export const Page1: React.FC = () => {
     setPage(newPage);
   };
 
-
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-
   const handleDeletePost = (id: number) => {
     console.log(`Post silindi: ${id}`);
+    deletePost(id); // Silme işlemi tetikleniyor
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return <CircularProgress />; // Yükleniyor durumu
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error}</div>; // Hata durumu
   }
 
   return (
@@ -64,8 +67,10 @@ export const Page1: React.FC = () => {
                     variant="outlined"
                     color="secondary"
                     onClick={() => handleDeletePost(post.id)}
+                    // disabled={isDeleting} // Silme işlemi yapılıyorsa buton pasif olur
                   >
-                    Sil
+                    Delete
+                    {/* {isDeleting ? "Siliniyor..." : "Sil"} */}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -78,8 +83,8 @@ export const Page1: React.FC = () => {
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={posts?.length || 0}
-        rowsPerPage={rowsPerPage} 
-        page={page} 
+        rowsPerPage={rowsPerPage}
+        page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

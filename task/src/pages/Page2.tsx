@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useComments } from "../contexts/CommentsContext";
+import { useDelete } from "../service/useDeleteQuery"; // useDelete hook'unu import et
 import {
   Table,
   TableBody,
@@ -15,32 +16,33 @@ import {
 
 export const Page2: React.FC = () => {
   const { comments, error, loading } = useComments();
-
+  const { mutate: deleteComment} = useDelete(
+    'https://jsonplaceholder.typicode.com/comments', // Silinecek kaynak URL
+    'comments' // Query Key
+  );
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); 
+    setPage(0);
   };
-
 
   const handleDeleteComment = (id: number) => {
     console.log(`Yorum silindi: ${id}`);
+    deleteComment(id); // Silme işlemi tetikleniyor
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return <CircularProgress />; // Yükleniyor durumu
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error}</div>; // Hata durumu
   }
 
   return (
@@ -68,7 +70,7 @@ export const Page2: React.FC = () => {
                     color="secondary"
                     onClick={() => handleDeleteComment(comment.id)}
                   >
-                    Sil
+                    Delete
                   </Button>
                 </TableCell>
               </TableRow>
@@ -83,7 +85,7 @@ export const Page2: React.FC = () => {
         count={comments?.length || 0}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage} 
+        onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </div>

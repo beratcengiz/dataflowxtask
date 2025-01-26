@@ -1,32 +1,39 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useGetPosts } from "../service/useGetPosts";
-import { Post } from "../service/useGetPosts";
+import React, { createContext, useContext } from "react";
+import { useGetData } from "../service/useGetQuery";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+
+// Post türü
+export type Post = {
+  id: number;
+  title: string;
+  body: string;
+};
+
 
 export const PostContext = createContext<any>(null);
 
-export const PostProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data, error, isLoading } = useGetPosts();
-  const [posts, setPosts] = useState<Post[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isLoading) {
-      setLoading(true);
-    } else if (error instanceof Error) {
-      setErrorMessage(error.message);
-      setLoading(false);
-    } else if (data) {
-      setPosts(data);
-      setLoading(false);
-    }
-  }, [data, error, isLoading]);
+export const PostProvider = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation();
+  const { isAuthenticated } = useAuth();
+
+  const params = isAuthenticated === "true" && location.pathname === "/page1";
+
+
+  const { data, error, isLoading } = useGetData<Post[]>(
+    "https://jsonplaceholder.typicode.com/posts",
+    "posts", 
+    params
+  );
+
   return (
-    <PostContext.Provider value={{ posts, error: errorMessage, loading }}>
+    <PostContext.Provider value={{ posts: data, error, loading: isLoading }}>
       {children}
     </PostContext.Provider>
   );
 };
+
 
 export const usePosts = () => {
   return useContext(PostContext);
