@@ -1,12 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Login } from "./pages/Login";
 import { ProjectRouter } from "./routes/ProjectRouter";
+import AppFrame from "./components/AppFrame/AppFrame";
+import { AuthProvider } from "./contexts/AuthContext";
 const App: React.FC = () => {
   return (
     <Router>
-      <Login></Login>
-      <ProjectRouter></ProjectRouter>
+      <AuthProvider>
+        <AppFrame>
+          <ProjectRouter></ProjectRouter>
+        </AppFrame>
+      </AuthProvider>
     </Router>
   );
 };
