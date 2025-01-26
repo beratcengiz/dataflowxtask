@@ -4,7 +4,7 @@ import { usePosts } from "../contexts/PostsContext";
 import { useDelete } from "../service/useDeleteQuery";
 import { useCreatePost } from "../service/useCreatePostQuery";
 import { useUpdatePost } from "../service/useUpdatePost";
-import { Post, CreatePostInput, UpdatePostInput } from "../models/PostModel";
+import { Post, CreatePostInput} from "../models/PostModel";
 import {
   Table,
   TableBody,
