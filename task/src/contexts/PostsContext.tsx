@@ -2,14 +2,7 @@ import React, { createContext, useContext } from "react";
 import { useGetData } from "../service/useGetQuery";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-
-// Post türü
-export type Post = {
-  id: number;
-  title: string;
-  body: string;
-};
-
+import { Post } from "../models/PostModel";
 
 export const PostContext = createContext<any>(null);
 

@@ -1,27 +1,20 @@
 import React, { createContext, ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { AuthModel } from "../models/AuthModel";
 
-interface AuthContextType {
-    isAuthenticated: any;
-    loginUsername: string;
-    loginPassword: string;
-    setLoginUsername: (username: string) => void;
-    setLoginPassword: (password: string) => void;
-    handleLogin: (e: React.FormEvent) => void;
-    handleLogout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthModel | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage("isAuthenticated", "false");
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [loginUsername, setLoginUsername] = useState<string>("");
+  const [loginPassword, setLoginPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>(""); 
   const navigate = useNavigate();
+
+
   const handleLogin = (e: React.FormEvent) => {
-    // Basit giriş kontrolü
+    e.preventDefault();
     if (loginUsername === "admin" && loginPassword === "password") {
       setIsAuthenticated("true");
       setErrorMessage("");
@@ -30,6 +23,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setErrorMessage("Hatalı kullanıcı adı veya şifre.");
     }
   };
+
 
   const handleLogout = () => {
     setIsAuthenticated("false");
@@ -47,13 +41,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setLoginPassword,
         setLoginUsername,
         loginUsername,
-        loginPassword
+        loginPassword,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => {
   const context = React.useContext(AuthContext);

@@ -2,14 +2,8 @@ import React, { createContext, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { useGetData } from "../service/useGetQuery";
+import { Comment } from "../models/CommentModel";
 
-export type Comments = {
-    postId: number;
-    id: number;
-    name: string;
-    email: string;
-    body: string;
-  };
 
 export const CommentContext = createContext<any>(null);
 
@@ -22,7 +16,7 @@ export const CommentProvider = ({ children }: { children: React.ReactNode }) => 
   const params = isAuthenticated === "true" && location.pathname === "/page2";
 
 
-  const { data, error, isLoading } = useGetData<Comments[]>(
+  const { data, error, isLoading } = useGetData<Comment[]>(
     "https://jsonplaceholder.typicode.com/comments", 
     "comments", 
     params

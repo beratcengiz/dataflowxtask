@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
