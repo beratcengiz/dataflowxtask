@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useDelete<T>(url: string, key: string) {
+
+export function useDelete<T extends { id: number }>(url: string, key: string) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -13,11 +14,15 @@ export function useDelete<T>(url: string, key: string) {
         throw new Error("Silme işlemi başarısız oldu");
       }
 
-      return id;
+      return id; 
     },
     onSuccess: (id) => {
-      queryClient.setQueryData([key], (oldData: any[]) => {
-        return oldData.filter((item) => item.id !== id);
+
+      queryClient.setQueryData<T[]>([key], (oldData) => {
+        if (oldData) {
+          return oldData.filter((item) => item.id !== id);
+        }
+        return [];
       });
     },
     onError: (error) => {

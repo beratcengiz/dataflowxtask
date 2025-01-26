@@ -11,7 +11,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [loginPassword, setLoginPassword] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>(""); 
   const navigate = useNavigate();
-
+  console.log('errorMessage',errorMessage)
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

@@ -53,6 +53,7 @@ export const Page1: React.FC = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
 
   const handleChangePage = (event: unknown, newPage: number) => {
+    console.log('event',event)
     setPage(newPage);
   };
 
